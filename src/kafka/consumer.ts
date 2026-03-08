@@ -13,8 +13,12 @@ export async function startConsumer() {
   });
 
   await consumer.run({
-    eachMessage: async ({ message }) => {
+    eachMessage: async ({ message, partition, topic }) => {
       const data = JSON.parse(message.value!.toString());
+      console.log("Received event:", data);
+      console.log("Topic:", topic);
+      console.log("Partition:", partition);
+      console.log("Offset:", message.offset);
       console.log("Received event:", data);
     },
   });

@@ -45,5 +45,29 @@ services:
     volumes:
       - kafka-data:/var/lib/kafka/data
 
+  kafka-ui-hono:
+   container_name: kafka-ui-hono
+   image: provectuslabs/kafka-ui:latest
+   depends_on:
+    - kafka-hono
+   ports:
+    - "8080:8080"
+   environment:
+    DYNAMIC_CONFIG_ENABLED: "true"
+
+    KAFKA_CLUSTERS_0_NAME: my-app
+    KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-hono:9094
+
+    KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: SASL_PLAINTEXT
+    KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM: PLAIN
+
+    KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: >
+      org.apache.kafka.common.security.plain.PlainLoginModule required
+      username="internal"
+      password="internal-pass";
+
+
+
+
 volumes:
   kafka-data:

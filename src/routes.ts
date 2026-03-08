@@ -3,6 +3,7 @@ import { db } from "./db";
 import { users } from "./schema";
 import { userSchema } from "./userSchema";
 import { eq } from "drizzle-orm";
+import { sendMessage } from "./kafka/producer";
 
 export const userRoutes = new Hono();
 
@@ -16,7 +17,9 @@ userRoutes.post("/users", async (c) => {
   }
 
   const [user] = await db.insert(users).values(parsed.data).returning();
-
+  await sendMessage("user-created", {
+    value: JSON.stringify(user),
+  });
   return c.json(user, 201);
 });
 

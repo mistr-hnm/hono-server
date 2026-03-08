@@ -11,3 +11,5 @@ export const kafka = new Kafka({
     password: "external-pass",
   },
 });
+
+// you can put all security configuration in env.
